@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration
 @ConfigurationProperties(prefix = "app.features.ingress-filtering")
 class IngressFilteringUcConfig {
 
-    var blockedCountries: List<String> = listOf()
+    lateinit var blockedCountries: List<String>
 
-    var blockedDataCenterOrgs: List<String> = listOf()
+    lateinit var blockedDataCenterOrgs: List<String>
 
     @Bean
     fun ipApiService(ipApiGateway: IpApiGateway): IngressService =

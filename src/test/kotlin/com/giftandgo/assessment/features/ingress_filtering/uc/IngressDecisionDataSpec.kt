@@ -8,15 +8,18 @@ import java.util.UUID
 
 class IngressDecisionDataSpec {
     @Test
-    fun ingressIsAllowedIfNoErrorsPresent() {
+    fun ingressIsAllowedIfEmptyErrorsPresent() {
         assertTrue(
-            IngressDecisionData(UUID.randomUUID().toString(), SimpleErrors(this))
+            IngressDecisionData(
+                UUID.randomUUID().toString(),
+                SimpleErrors(this)
+            )
                 .isAllowed
         )
     }
 
     @Test
-    fun ingressNotAllowedIfNoErrorsPresent() {
+    fun ingressNotAllowedIfErrorsPresent() {
         assertFalse(
             IngressDecisionData(
                 UUID.randomUUID().toString(),

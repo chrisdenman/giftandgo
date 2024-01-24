@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate
 @ConfigurationProperties(prefix = "app.features.ingress-filtering")
 class IngressFilteringIaConfig {
 
-    var ipApiUrlPattern: String = ""
+    lateinit var ipApiUrl: String
 
     @Bean
     fun ipApiRestTemplate(builder: RestTemplateBuilder): RestTemplate = builder.build()

@@ -1,7 +1,6 @@
 package com.giftandgo.assessment.features.ingress_filtering.ui
 
 import com.giftandgo.assessment.features.ingress_filtering.uc.IngressService
-import com.giftandgo.assessment.features.service_history.ui.RemoteHostResolver
 import jakarta.servlet.Filter
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
@@ -16,6 +15,12 @@ open class IngressFilter(
     private val ingressService: IngressService,
     private val remoteHostResolver: RemoteHostResolver? = null
 ) : Filter {
+
+    companion object {
+        const val REQUEST_ATTRIBUTE__IP_PROVIDER = "INGRESS_FILTER_IP_PROVIDER=292e035f-e160-4c34-a427-a27096245d37"
+        const val HTTP_HEADER__X_FORWARDED_FOR = "x-forwarded-for"
+    }
+
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
         ingressService
@@ -23,8 +28,12 @@ open class IngressFilter(
             .let { ingressionDecision ->
                 when (ingressionDecision.isAllowed) {
                     true -> {
-                        request.setAttribute("292e035f-e160-4c34-a427-a27096245d37", ingressionDecision.ipProvider)
-                        chain.doFilter(request, response)
+                        chain.doFilter(
+                            request.also {
+                                it.setAttribute(REQUEST_ATTRIBUTE__IP_PROVIDER, ingressionDecision.ipProvider)
+                            },
+                            response
+                        )
                     }
 
                     false ->
@@ -41,12 +50,10 @@ open class IngressFilter(
     }
 
     private fun getOriginHost(httpServletRequest: HttpServletRequest): String =
-        remoteHostResolver?.resolve(httpServletRequest) ?:
-            httpServletRequest.getHeaders("HTTP_X_FORWARDED_FOR").toList().let {
-                if (it.isEmpty()) {
-                    httpServletRequest.remoteHost
-                } else {
-                    it[0]
-                }
+        httpServletRequest.run {
+            remoteHostResolver?.resolve(this) ?: when ((HTTP_HEADER__X_FORWARDED_FOR in headerNames.toList())) {
+                true -> getHeaders(HTTP_HEADER__X_FORWARDED_FOR).nextElement()
+                false -> remoteHost
             }
+        }
 }

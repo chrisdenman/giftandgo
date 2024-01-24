@@ -6,8 +6,7 @@ import org.springframework.validation.Validator
 
 class IsIngressPermissibleValidator(private val ingressFilteringUcConfig: IngressFilteringUcConfig) : Validator {
 
-    override fun supports(clazz: Class<*>): Boolean =
-        IpApiResponse::class.java == clazz
+    override fun supports(clazz: Class<*>): Boolean = IpApiResponse::class.java == clazz
 
     override fun validate(target: Any, errors: Errors) {
         if ((target as IpApiResponse).status != "success") {

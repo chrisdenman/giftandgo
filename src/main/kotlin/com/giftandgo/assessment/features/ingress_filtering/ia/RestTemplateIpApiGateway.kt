@@ -9,7 +9,7 @@ class RestTemplateIpApiGateway(
     override fun queryBy(host: String): IpApiResponse =
         ipApiRestTemplate
             .getForObject(
-                String.format(ingressFilteringIaConfig.ipApiUrlPattern, host),
+                "${ingressFilteringIaConfig.ipApiUrl}/json/$host?fields=status,countryCode,hosting,org,isp",
                 IpApiResponseData::class.java
             )!!
 }

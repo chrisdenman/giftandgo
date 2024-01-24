@@ -55,7 +55,9 @@ class PersonSpeedDataController(private val springValidator: Validator) {
                     response.status = HttpStatus.BAD_REQUEST.value()
                     PeopleSpeedDataCreateResponse(
                         errors = it.first.fold(listOf()) { acc, curr ->
-                            acc + curr.second.allErrors.map { "peopleSpeedData[${curr.first}].${(it as FieldError).field}.${it.code!!}" }
+                            acc + curr.second.allErrors.map {
+                                "peopleSpeedData[${curr.first}].${(it as FieldError).field}.${it.code!!}"
+                            }
                         })
                 }
             }
@@ -72,6 +74,7 @@ class PersonSpeedDataController(private val springValidator: Validator) {
                 }
             )
             validator = springValidator
+
             if (target != null) {
                 validate()
             }
