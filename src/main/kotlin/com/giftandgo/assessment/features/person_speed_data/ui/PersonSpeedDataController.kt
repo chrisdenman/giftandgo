@@ -48,7 +48,7 @@ class PersonSpeedDataController(private val springValidator: Validator) {
                 if (it.first.isEmpty()) {
                     PeopleSpeedDataCreateResponse(
                         it.second.map {
-                            PersonSpeedDataCreateResponse(it.name, it.transport, it.averageSpeed);
+                            PersonSpeedDataCreateResponse(it.name, it.transport, it.averageSpeed)
                         }
                     )
                 } else {

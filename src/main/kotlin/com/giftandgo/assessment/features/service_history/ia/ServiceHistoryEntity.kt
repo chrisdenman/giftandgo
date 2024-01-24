@@ -18,6 +18,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.util.UUID
 
+@Suppress("JpaDataSourceORMInspection")
 @Entity
 @Table(name = "SERVICE_HISTORY")
 data class ServiceHistoryEntity(

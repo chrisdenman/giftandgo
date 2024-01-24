@@ -1,20 +1,21 @@
 package com.giftandgo.assessment.features.ingress_filtering.ui
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.giftandgo.assessment.features.ingress_filtering.uc.IngressDecision
 import com.giftandgo.assessment.features.ingress_filtering.uc.IngressService
-import jakarta.servlet.Filter
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
-import jakarta.servlet.ServletRequest
-import jakarta.servlet.ServletResponse
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus.FORBIDDEN
+import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
+
 
 open class IngressFilter(
     private val ingressService: IngressService,
     private val remoteHostResolver: RemoteHostResolver? = null
-) : Filter {
+) : OncePerRequestFilter() {
 
     companion object {
         const val REQUEST_ATTRIBUTE__IP_PROVIDER = "INGRESS_FILTER_IP_PROVIDER=292e035f-e160-4c34-a427-a27096245d37"
@@ -22,13 +23,17 @@ open class IngressFilter(
     }
 
     @Throws(IOException::class, ServletException::class)
-    override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
+    override fun doFilterInternal(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        filterChain: FilterChain
+    ) {
         ingressService
-            .getIngressDecisionFor(getOriginHost(request as HttpServletRequest))
+            .getIngressDecisionFor(getOriginHost(request))
             .let { ingressionDecision ->
                 when (ingressionDecision.isAllowed) {
                     true -> {
-                        chain.doFilter(
+                        filterChain.doFilter(
                             request.also {
                                 it.setAttribute(REQUEST_ATTRIBUTE__IP_PROVIDER, ingressionDecision.ipProvider)
                             },
@@ -36,18 +41,23 @@ open class IngressFilter(
                         )
                     }
 
-                    false ->
-                        (response as HttpServletResponse)
-                            .sendError(FORBIDDEN.value(),
-                                ingressionDecision
-                                    .errors
-                                    .allErrors
-                                    .map { it.defaultMessage }
-                                    .joinToString()
-                            )
+                    false -> handleIngressRejection(response, ingressionDecision)
                 }
             }
     }
+
+    private fun handleIngressRejection(response: HttpServletResponse, ingressDecision: IngressDecision) {
+        val content = mapOf("errors" to
+            ingressDecision
+                .errors
+                .allErrors
+                .map { it.defaultMessage ?: "" }
+        )
+        response.contentType = "application/json"
+        response.status = FORBIDDEN.value()
+        response.writer.write(ObjectMapper().writeValueAsString(content))
+    }
+
 
     private fun getOriginHost(httpServletRequest: HttpServletRequest): String =
         httpServletRequest.run {

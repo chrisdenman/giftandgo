@@ -49,5 +49,8 @@ tasks.withType(KotlinCompile).configureEach {
 }
 
 tasks.named('test') {
+	//noinspection GrUnresolvedAccess
 	useJUnitPlatform()
+	//noinspection GrUnresolvedAccess
+	jvmArgs "-Dspring.profiles.active=test"
 }
