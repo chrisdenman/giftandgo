@@ -18,7 +18,7 @@ class CountryCodeBlockedSpec : PeopleSpeedDataSpecBase() {
     fun `That requests with blocked country codes are forbidden`() {
         stubIpApi()
         post()
-            .expectBody("""{"errors":["Your country is blocked."]}""")
+            .expectBody("""{"created":[],"errors":["Your country is blocked."]}""")
             .expectStatus(FORBIDDEN)
     }
 }
