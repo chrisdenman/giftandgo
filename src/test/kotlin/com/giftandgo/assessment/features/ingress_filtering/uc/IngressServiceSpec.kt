@@ -3,7 +3,7 @@ package com.giftandgo.assessment.features.ingress_filtering.uc
 import com.giftandgo.assessment.features.ingress_filtering.ia.IpApiGateway
 import com.giftandgo.assessment.features.ingress_filtering.ia.IpApiResponseData
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertSame
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.springframework.validation.SimpleErrors
@@ -33,7 +33,7 @@ class IngressServiceSpec {
         val subject = IngressService(ipApiGatewayMock, validatorMock)
         val ingressDecision = subject.getIngressDecisionFor(host)
 
-        assertSame(errors, ingressDecision.errors)
+        assertFalse(ingressDecision.errors.hasErrors())
         assertEquals(isp, ingressDecision.ipProvider)
     }
 }

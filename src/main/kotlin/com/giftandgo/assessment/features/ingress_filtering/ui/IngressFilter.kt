@@ -7,13 +7,14 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.context.MessageSource
 import org.springframework.http.HttpStatus.FORBIDDEN
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 
-
 open class IngressFilter(
     private val ingressService: IngressService,
+    private val messageSource: MessageSource,
     private val remoteHostResolver: RemoteHostResolver? = null
 ) : OncePerRequestFilter() {
 
@@ -46,22 +47,25 @@ open class IngressFilter(
             }
     }
 
-    private fun handleIngressRejection(response: HttpServletResponse, ingressDecision: IngressDecision) {
-        val content = mapOf("errors" to
-            ingressDecision
-                .errors
-                .allErrors
-                .map { it.defaultMessage ?: "" }
-        )
-        response.contentType = "application/json"
-        response.status = FORBIDDEN.value()
-        response.writer.write(ObjectMapper().writeValueAsString(content))
-    }
-
+    private fun handleIngressRejection(response: HttpServletResponse, ingressDecision: IngressDecision) =
+        response.run {
+            contentType = "application/json"
+            status = FORBIDDEN.value()
+            writer.write(
+                ObjectMapper()
+                    .writeValueAsString(
+                        mapOf(
+                            "created" to listOf(),
+                            "errors" to ingressDecision.errors.resolveMessages(messageSource)
+                        )
+                    )
+            )
+        }
 
     private fun getOriginHost(httpServletRequest: HttpServletRequest): String =
         httpServletRequest.run {
-            remoteHostResolver?.resolve(this) ?: when ((HTTP_HEADER__X_FORWARDED_FOR in headerNames.toList())) {
+            remoteHostResolver
+                ?.resolve(this) ?: when ((HTTP_HEADER__X_FORWARDED_FOR in headerNames.toList())) {
                 true -> getHeaders(HTTP_HEADER__X_FORWARDED_FOR).nextElement()
                 false -> remoteHost
             }

@@ -20,11 +20,34 @@ import org.springframework.http.MediaType.TEXT_PLAIN
 import org.springframework.http.ResponseEntity
 import java.util.UUID
 
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableWireMock(
     ConfigureWireMock(name = "ip-api", property = "app.features.ingress-filtering.ip-api-url")
 )
-class IntegrationSpecBase {
+class PeopleSpeedDataSpecBase {
+
+    companion object {
+        fun createRow(
+            uuid: String = "18148426-89e1-11ee-b9d1-0242ac120002",
+            id: String = "1X1D14",
+            name: String = "John Smith",
+            likes: String = "Likes Apricots",
+            transport: String = "Rides A Bike",
+            avgSpeed: String = "6.2",
+            topSpeed: String = "12.1",
+        ): String =
+            listOf(uuid, id, name, likes, transport, avgSpeed, topSpeed)
+                .joinToString("|")
+
+        val ROW = createRow()
+
+        val ROW__NEGATIVE_AVERAGE = createRow(avgSpeed = "-6.2")
+        val ROW__NEGATIVE_TOP_SPEED = createRow(topSpeed = "-12.1")
+        val ROW__MISSING_TOP_SPEED = createRow(topSpeed = "")
+        val ROW__MALFORMED_UUID = createRow("_not_a_uuid_")
+        val UUID_X_FORWARDED_FOR__VALUE = UUID.randomUUID().toString()
+    }
 
     @InjectWireMock("ip-api")
     protected lateinit var wiremock: WireMockServer
@@ -36,10 +59,8 @@ class IntegrationSpecBase {
     @Autowired
     protected lateinit var environment: Environment
 
-    protected val uuidXForwardedFor = UUID.randomUUID().toString()
-
-    fun stubIpApiResponse(
-        xForwardedFor: String,
+    fun stubIpApi(
+        xForwardedFor: String = UUID_X_FORWARDED_FOR__VALUE,
         status: String = "success",
         countryCode: String = "GB",
         isp: String = "isp",
@@ -57,16 +78,16 @@ class IntegrationSpecBase {
     }
 
     fun <T> ResponseEntity<T>.expectStatus(expected: HttpStatus): ResponseEntity<T> =
-        this.apply { assertEquals(expected, statusCode) }
+        apply { assertEquals(expected, statusCode) }
 
     fun <T> ResponseEntity<T>.expectBody(expected: String): ResponseEntity<T> =
-        this.apply {
+        apply {
             assertEquals(expected, body)
         }
 
-    fun createPeopleSpeedData(
-        xForwardedFor: String,
-        requestContent: String,
+    fun post(
+        requestContent: String = ROW,
+        xForwardedFor: String = UUID_X_FORWARDED_FOR__VALUE,
         headersMutator: (HttpHeaders).() -> HttpHeaders = { this }
     ): ResponseEntity<String> =
         restTemplate.postForEntity(

@@ -31,24 +31,34 @@ class PersonSpeedDataController(private val springValidator: Validator) {
         response: HttpServletResponse
     ): PeopleSpeedDataCreateResponse =
         command
-            .foldIndexed(listOf<Pair<Int, BindingResult>>() to listOf<PersonSpeedDataCreateCommand>()) { recordIndex, acc, personLine ->
+            .foldIndexed(
+                listOf<Pair<Int, BindingResult>>() to listOf<PersonSpeedDataCreateCommand>()
+            ) { recordIndex, acc, personLine ->
                 StringTokenizer(personLine, "|")
                     .run {
-                        val textualPropertyValues: Map<String, String?> =
-                            listOf("uuid", "id", "name", "likes", "transport", "averageSpeed", "topSpeed")
-                                .associateWith { if (hasMoreTokens()) nextToken() else null }
-                        validate(textualPropertyValues).run {
-                            when (bindingResult.hasErrors()) {
-                                true -> (acc.first + (recordIndex to bindingResult)) to acc.second
-                                false -> acc.first to (acc.second + target as PersonSpeedDataCreateCommand)
-                            }
+                        val br = bind(
+                            listOf(
+                                "uuid",
+                                "id",
+                                "name",
+                                "likes",
+                                "transport",
+                                "averageSpeed",
+                                "topSpeed"
+                            ).associateWith { if (hasMoreTokens()) nextToken() else null }
+                        )
+                            .bindingResult
+
+                        when (br.hasErrors()) {
+                            true -> (acc.first + (recordIndex to br)) to acc.second
+                            false -> acc.first to (acc.second + br.target as PersonSpeedDataCreateCommand)
                         }
                     }
             }.let { it ->
                 if (it.first.isEmpty()) {
                     PeopleSpeedDataCreateResponse(
                         it.second.map {
-                            PersonSpeedDataCreateResponse(it.name, it.transport, it.averageSpeed)
+                            PersonSpeedDataCreateResponse(it.name!!, it.transport!!, it.averageSpeed!!)
                         }
                     )
                 } else {
@@ -56,13 +66,16 @@ class PersonSpeedDataController(private val springValidator: Validator) {
                     PeopleSpeedDataCreateResponse(
                         errors = it.first.fold(listOf()) { acc, curr ->
                             acc + curr.second.allErrors.map {
-                                "peopleSpeedData[${curr.first}].${(it as FieldError).field}.${it.code!!}"
+                                when ((it is FieldError)) {
+                                    true -> "peopleSpeedData[${curr.first}].${it.field}.${it.code}"
+                                    false -> "peopleSpeedData[${curr.first}].${it.code}"
+                                }
                             }
                         })
                 }
             }
 
-    private fun validate(textualPropertyValues: Map<String, String?>): DataBinder =
+    private fun bind(textualPropertyValues: Map<String, String?>): DataBinder =
         DataBinder(null).apply {
             setTargetType(ResolvableType.forClass(PersonSpeedDataCreateCommand::class.java))
             construct(
@@ -70,7 +83,7 @@ class PersonSpeedDataController(private val springValidator: Validator) {
                     override fun resolveValue(name: String, type: Class<*>): Any? =
                         textualPropertyValues[name]
 
-                    override fun getNames(): MutableSet<String> = textualPropertyValues.keys.toMutableSet()
+                    override fun getNames(): Set<String> = textualPropertyValues.keys
                 }
             )
             validator = springValidator

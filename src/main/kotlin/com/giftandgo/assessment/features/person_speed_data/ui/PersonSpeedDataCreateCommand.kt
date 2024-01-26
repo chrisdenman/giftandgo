@@ -9,29 +9,29 @@ import java.util.UUID
 data class PersonSpeedDataCreateCommand(
 
     @field:NotNull
-    val uuid: UUID,
+    val uuid: UUID?,
 
     @field:NotNull
     @field:NotBlank
-    val id: String,
+    val id: String?,
 
     @field:NotNull
     @field:NotBlank
-    val name: String,
+    val name: String?,
 
     @field:NotNull
     @field:NotBlank
-    val likes: String,
+    val likes: String?,
 
     @field:NotNull
     @field:NotBlank
-    val transport: String,
+    val transport: String?,
 
     @field:DecimalMin("0.0")
     @field:NotNull
-    val averageSpeed: BigDecimal,
+    val averageSpeed: BigDecimal?,
 
     @field:DecimalMin("0.0")
     @field:NotNull
-    val topSpeed: BigDecimal
+    val topSpeed: BigDecimal?
 )

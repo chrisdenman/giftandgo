@@ -5,29 +5,20 @@ import com.maciejwalkowiak.wiremock.spring.ConfigureWireMock
 import com.maciejwalkowiak.wiremock.spring.EnableWireMock
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpStatus.CREATED
 import org.springframework.http.HttpStatus.FORBIDDEN
+import org.springframework.test.context.TestPropertySource
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableWireMock(
     ConfigureWireMock(name = "ip-api", property = "app.features.ingress-filtering.ip-api-url")
 )
-class RestTemplateIpApiGatewaySpec : PeopleSpeedDataSpecBase() {
-
+@TestPropertySource
+class DataCentreBlockedSpec : PeopleSpeedDataSpecBase() {
     @Test
-    fun `That posting people speed data is created successfully`() {
+    fun `That requests with blocked data centres that are hosting are forbidden`() {
         stubIpApi()
         post()
-            .expectBody(
-                """{"created":[{"name":"John Smith","transport":"Rides A Bike","averageSpeed":6.2}],"errors":[]}"""
-            )
-            .expectStatus(CREATED)
-    }
-
-    @Test
-    fun `That ip api declinations result in a FORBIDDEN status code`() {
-        stubIpApi(status = "not_success")
-        post()
+            .expectBody("""{"errors":["Your data centre is blocked."]}""")
             .expectStatus(FORBIDDEN)
     }
 }

@@ -3,6 +3,7 @@ package com.giftandgo.assessment.features.ingress_filtering.ui
 import com.giftandgo.assessment.features.ingress_filtering.uc.IngressService
 import jakarta.servlet.Filter
 import org.springframework.boot.web.servlet.FilterRegistrationBean
+import org.springframework.context.MessageSource
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
@@ -11,12 +12,15 @@ import org.springframework.core.Ordered
 class IngressFilteringUiConfig {
 
     @Bean
-    fun ingressFilter(ingressService: IngressService): Filter = IngressFilter(ingressService)
+    fun ingressFilter(
+        ingressService: IngressService,
+        messageSource: MessageSource
+    ): Filter = IngressFilter(ingressService, messageSource)
 
     @Bean
-    fun ingressFilterRegistration(ingressService: IngressService): FilterRegistrationBean<*> =
+    fun ingressFilterRegistration(ingressFilter: Filter): FilterRegistrationBean<*> =
         FilterRegistrationBean<Filter>().apply {
-            filter = ingressFilter(ingressService)
+            filter = ingressFilter
             order = Ordered.HIGHEST_PRECEDENCE + 1000
             setName("IP Address Filter")
             addUrlPatterns("/peopleSpeedData")
