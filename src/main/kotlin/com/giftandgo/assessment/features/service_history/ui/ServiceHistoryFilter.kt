@@ -33,9 +33,9 @@ open class ServiceHistoryFilter(private val serviceHistoryService: ServiceHistor
             timeMeasure.stop()
         } finally {
             serviceHistoryService.saveServiceHistory(
-                URI.create((request as HttpServletRequest).requestURI),
+                URI.create(request.requestURI),
                 LocalDateTime.now(),
-                HttpStatus.resolve((response as HttpServletResponse).status)!!,
+                HttpStatus.resolve((response).status)!!,
                 InetAddress.getByName(request.remoteAddr),
                 request.locale.country,
                 request.getAttribute(REQUEST_ATTRIBUTE__IP_PROVIDER) as? String,
