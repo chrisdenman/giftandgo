@@ -16,7 +16,7 @@ class ValidationSpec : PeopleSpeedDataSpecBase() {
     fun `That malformed UUIDs are reported`() {
         stubIpApi()
         post(ROW__MALFORMED_UUID)
-            .expectBody("""{"created":[],"errors":["peopleSpeedData[0].uuid.typeMismatch"]}""")
+            .hasBody("""{"created":[],"errors":["peopleSpeedData[0].uuid.typeMismatch"]}""")
             .expectStatus(CREATED)
     }
 
@@ -24,7 +24,7 @@ class ValidationSpec : PeopleSpeedDataSpecBase() {
     fun `That average speeds cannot be negatively valued`() {
         stubIpApi()
         post(ROW__NEGATIVE_AVERAGE)
-            .expectBody("""{"created":[],"errors":["peopleSpeedData[0].averageSpeed.DecimalMin"]}""")
+            .hasBody("""{"created":[],"errors":["peopleSpeedData[0].averageSpeed.DecimalMin"]}""")
             .expectStatus(CREATED)
     }
 
@@ -32,7 +32,7 @@ class ValidationSpec : PeopleSpeedDataSpecBase() {
     fun `That top speeds cannot be negatively valued`() {
         stubIpApi()
         post(ROW__NEGATIVE_TOP_SPEED)
-            .expectBody("""{"created":[],"errors":["peopleSpeedData[0].topSpeed.DecimalMin"]}""")
+            .hasBody("""{"created":[],"errors":["peopleSpeedData[0].topSpeed.DecimalMin"]}""")
             .expectStatus(CREATED)
     }
 
@@ -40,7 +40,7 @@ class ValidationSpec : PeopleSpeedDataSpecBase() {
     fun `That missing top speeds are caught`() {
         stubIpApi(UUID_X_FORWARDED_FOR__VALUE)
         post(ROW__MISSING_TOP_SPEED)
-            .expectBody("""{"created":[],"errors":["peopleSpeedData[0].topSpeed.NotNull"]}""")
+            .hasBody("""{"created":[],"errors":["peopleSpeedData[0].topSpeed.NotNull"]}""")
             .expectStatus(CREATED)
     }
 }
