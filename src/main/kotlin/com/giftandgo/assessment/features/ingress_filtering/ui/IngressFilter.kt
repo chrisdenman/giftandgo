@@ -55,7 +55,7 @@ open class IngressFilter(
                 ObjectMapper()
                     .writeValueAsString(
                         mapOf(
-                            "created" to listOf(),
+                            "created" to emptyList(),
                             "errors" to ingressDecision.errors.resolveMessages(messageSource)
                         )
                     )
@@ -65,7 +65,8 @@ open class IngressFilter(
     private fun getOriginHost(httpServletRequest: HttpServletRequest): String =
         httpServletRequest.run {
             remoteHostResolver
-                ?.resolve(this) ?: when ((HTTP_HEADER__X_FORWARDED_FOR in headerNames.toList())) {
+                ?.resolve(this) ?: when ((HTTP_HEADER__X_FORWARDED_FOR in headerNames.toList()
+                .map { it?.lowercase() })) {
                 true -> getHeaders(HTTP_HEADER__X_FORWARDED_FOR).nextElement()
                 false -> remoteHost
             }

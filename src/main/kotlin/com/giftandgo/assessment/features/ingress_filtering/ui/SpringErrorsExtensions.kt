@@ -3,6 +3,7 @@ package com.giftandgo.assessment.features.ingress_filtering.ui
 import com.giftandgo.assessment.features.ingress_filtering.uc.IsIngressPermissibleValidator
 import org.springframework.context.MessageSource
 import org.springframework.validation.Errors
+import org.springframework.validation.FieldError
 import java.util.Locale
 
 fun Errors.rejectNull(
@@ -11,27 +12,14 @@ fun Errors.rejectNull(
 ): Errors =
     also { rejectValue(field, code) }
 
-fun Errors.resolveMessages(messageSource: MessageSource): Iterable<String> =
-    resolveObjectMessages(messageSource) + resolveFieldMessages(messageSource)
-
-fun Errors.resolveFieldMessages(messageSource: MessageSource): Iterable<String> =
-    fieldErrors
-        .map {
-            messageSource
-                .getMessage(
-                    "${it.objectName}.${it.field}.${it.code}",
-                    arrayOf(),
-                    Locale.getDefault()
-                )
-        }
-
-fun Errors.resolveObjectMessages(messageSource: MessageSource): Iterable<String> =
-    globalErrors
-        .map {
-            messageSource
-                .getMessage(
-                    "${it.objectName}.${it.code}",
-                    arrayOf(),
-                    Locale.getDefault()
-                )
-        }
+fun Errors.resolveMessages(
+    messageSource: MessageSource,
+    locale: Locale = Locale.getDefault()
+): Iterable<String> =
+    allErrors.map {
+        messageSource.getMessage(
+            "${it.objectName}.${if (it is FieldError) it.field else ""}.${it.code}",
+            it.arguments,
+            locale
+        )
+    }
