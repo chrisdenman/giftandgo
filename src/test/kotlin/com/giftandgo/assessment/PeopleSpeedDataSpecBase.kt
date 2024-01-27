@@ -28,7 +28,7 @@ import java.util.UUID
 class PeopleSpeedDataSpecBase {
 
     companion object {
-        fun createRow(
+        private fun createRow(
             uuid: String = "18148426-89e1-11ee-b9d1-0242ac120002",
             id: String = "1X1D14",
             name: String = "John Smith",
@@ -80,7 +80,7 @@ class PeopleSpeedDataSpecBase {
     fun <T> ResponseEntity<T>.expectStatus(expected: HttpStatus): ResponseEntity<T> =
         apply { assertEquals(expected, statusCode) }
 
-    fun <T> ResponseEntity<T>.expectBody(expected: String): ResponseEntity<T> =
+    fun <T> ResponseEntity<T>.hasBody(expected: String): ResponseEntity<T> =
         apply {
             assertEquals(expected, body)
         }
