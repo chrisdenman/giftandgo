@@ -18,7 +18,7 @@ class RestTemplateIpApiGatewaySpec : PeopleSpeedDataSpecBase() {
     fun `That posting people speed data is created successfully`() {
         stubIpApi()
         post()
-            .hasBody(
+            .hasJsonBody(
                 """{"created":[{"name":"John Smith","transport":"Rides A Bike","averageSpeed":6.2}],"errors":[]}"""
             )
             .expectStatus(CREATED)

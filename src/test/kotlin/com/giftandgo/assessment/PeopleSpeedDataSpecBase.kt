@@ -1,5 +1,6 @@
 package com.giftandgo.assessment
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.giftandgo.assessment.features.ingress_filtering.ui.IngressFilter.Companion.HTTP_HEADER__X_FORWARDED_FOR
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
@@ -59,6 +60,8 @@ class PeopleSpeedDataSpecBase {
     @Autowired
     protected lateinit var environment: Environment
 
+    protected val jsonMapper: ObjectMapper = ObjectMapper()
+
     fun stubIpApi(
         xForwardedFor: String = UUID_X_FORWARDED_FOR__VALUE,
         status: String = "success",
@@ -79,6 +82,15 @@ class PeopleSpeedDataSpecBase {
 
     fun <T> ResponseEntity<T>.expectStatus(expected: HttpStatus): ResponseEntity<T> =
         apply { assertEquals(expected, statusCode) }
+
+
+    fun <T> ResponseEntity<T>.hasJsonBody(expectedJson: String): ResponseEntity<T> =
+        apply {
+            assertEquals(
+                jsonMapper.readTree(expectedJson),
+                jsonMapper.readTree(body.toString())
+            )
+        }
 
     fun <T> ResponseEntity<T>.hasBody(expected: String): ResponseEntity<T> =
         apply {
