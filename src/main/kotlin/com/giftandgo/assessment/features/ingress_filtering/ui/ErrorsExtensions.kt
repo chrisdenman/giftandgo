@@ -1,6 +1,6 @@
 package com.giftandgo.assessment.features.ingress_filtering.ui
 
-import com.giftandgo.assessment.features.ingress_filtering.uc.IsIngressPermissibleValidator
+import com.giftandgo.assessment.features.ingress_filtering.uc.IpApiResponseValidator
 import org.springframework.context.MessageSource
 import org.springframework.validation.Errors
 import org.springframework.validation.FieldError
@@ -8,7 +8,7 @@ import java.util.Locale
 
 fun Errors.rejectNull(
     field: String,
-    code: String = IsIngressPermissibleValidator.FIELD_ERROR_CODE__FIELD_CAN_NOT_BE_NULL
+    code: String = IpApiResponseValidator.FIELD_ERROR_CODE__FIELD_CAN_NOT_BE_NULL
 ): Errors =
     also { rejectValue(field, code) }
 

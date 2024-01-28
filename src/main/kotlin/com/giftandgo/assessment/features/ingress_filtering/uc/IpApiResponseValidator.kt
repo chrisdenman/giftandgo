@@ -5,7 +5,7 @@ import com.giftandgo.assessment.features.ingress_filtering.ui.rejectNull
 import org.springframework.validation.Errors
 import org.springframework.validation.Validator
 
-class IsIngressPermissibleValidator(private val ingressFilteringUcConfig: IngressFilteringUcConfig) : Validator {
+class IpApiResponseValidator(private val ingressFilteringUcConfig: IngressFilteringUcConfig) : Validator {
 
     companion object {
         const val FIELD_ERROR_CODE__FIELD_CAN_NOT_BE_NULL = "null"

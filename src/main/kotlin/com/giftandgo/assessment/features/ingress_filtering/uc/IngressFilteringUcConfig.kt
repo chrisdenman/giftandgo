@@ -16,5 +16,5 @@ class IngressFilteringUcConfig {
 
     @Bean
     fun ipApiService(ipApiGateway: IpApiGateway): IngressService =
-        IngressService(ipApiGateway, IsIngressPermissibleValidator(this))
+        IngressService(ipApiGateway, IpApiResponseValidator(this))
 }

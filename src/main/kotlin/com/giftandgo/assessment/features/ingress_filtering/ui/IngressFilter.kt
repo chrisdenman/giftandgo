@@ -1,7 +1,6 @@
 package com.giftandgo.assessment.features.ingress_filtering.ui
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.giftandgo.assessment.features.ingress_filtering.uc.IngressDecision
 import com.giftandgo.assessment.features.ingress_filtering.uc.IngressService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
@@ -35,32 +34,29 @@ open class IngressFilter(
                 when (ingressionDecision.isAllowed) {
                     true -> {
                         filterChain.doFilter(
-                            request.also {
-                                it.setAttribute(REQUEST_ATTRIBUTE__IP_PROVIDER, ingressionDecision.ipProvider)
+                            request.apply {
+                                setAttribute(REQUEST_ATTRIBUTE__IP_PROVIDER, ingressionDecision.ipProvider)
                             },
                             response
                         )
                     }
 
-                    false -> handleIngressRejection(response, ingressionDecision)
+                    false -> response.apply {
+                        contentType = "application/json"
+                        status = FORBIDDEN.value()
+                        writer.write(
+                            ObjectMapper()
+                                .writeValueAsString(
+                                    mapOf<String, Any>(
+                                        "created" to listOf<String>(),
+                                        "errors" to ingressionDecision.errors.resolveMessages(messageSource)
+                                    )
+                                )
+                        )
+                    }
                 }
             }
     }
-
-    private fun handleIngressRejection(response: HttpServletResponse, ingressDecision: IngressDecision) =
-        response.run {
-            contentType = "application/json"
-            status = FORBIDDEN.value()
-            writer.write(
-                ObjectMapper()
-                    .writeValueAsString(
-                        mapOf(
-                            "created" to emptyList(),
-                            "errors" to ingressDecision.errors.resolveMessages(messageSource)
-                        )
-                    )
-            )
-        }
 
     private fun getOriginHost(httpServletRequest: HttpServletRequest): String =
         httpServletRequest.run {
