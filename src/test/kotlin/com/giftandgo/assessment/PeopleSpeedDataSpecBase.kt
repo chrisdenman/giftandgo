@@ -48,6 +48,15 @@ class PeopleSpeedDataSpecBase {
         val ROW__MISSING_TOP_SPEED = createRow(topSpeed = "")
         val ROW__MALFORMED_UUID = createRow("_not_a_uuid_")
         val UUID_X_FORWARDED_FOR__VALUE = UUID.randomUUID().toString()
+
+        fun errorsOnlyJson(vararg errorCodes: String): String =
+            """{"created":[],"errors":[${errorCodes.joinToString(",", "\"", "\"")}]}"""
+
+        const val DEFAULT__STATUS = "success"
+        const val DEFAULT__COUNTRY_CODE =   "GB"
+        const val DEFAULT__ISP =    "isp"
+        const val DEFAULT__ORG =    "org"
+        const val DEFAULT__HOSTING =    "true"
     }
 
     @InjectWireMock("ip-api")
@@ -64,11 +73,11 @@ class PeopleSpeedDataSpecBase {
 
     fun stubIpApi(
         xForwardedFor: String = UUID_X_FORWARDED_FOR__VALUE,
-        status: String = "success",
-        countryCode: String = "GB",
-        isp: String = "isp",
-        org: String = "org",
-        hosting: String = "true"
+        status: String = DEFAULT__STATUS,
+        countryCode: String = DEFAULT__COUNTRY_CODE,
+        isp: String = DEFAULT__ISP,
+        org: String = DEFAULT__ORG,
+        hosting: String = DEFAULT__HOSTING
     ) {
         wiremock.stubFor(
             WireMock.get(WireMock.urlPathMatching("/json/${xForwardedFor}.*"))
@@ -114,5 +123,6 @@ class PeopleSpeedDataSpecBase {
                     }
                 )
             ),
-            String::class.java)
+            String::class.java
+        )
 }

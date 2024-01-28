@@ -18,7 +18,7 @@ class DataCentreBlockedSpec : PeopleSpeedDataSpecBase() {
     fun `That requests with blocked data centres that are hosting are forbidden`() {
         stubIpApi()
         post()
-            .hasJsonBody("""{"created":[],"errors":["Your data centre is blocked."]}""")
+            .hasJsonBody(errorsOnlyJson("Your data centre is blocked."))
             .expectStatus(FORBIDDEN)
     }
 }
