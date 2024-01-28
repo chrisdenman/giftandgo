@@ -47,6 +47,7 @@ class PeopleSpeedDataSpecBase {
         val ROW__NEGATIVE_TOP_SPEED = createRow(topSpeed = "-12.1")
         val ROW__MISSING_TOP_SPEED = createRow(topSpeed = "")
         val ROW__MALFORMED_UUID = createRow("_not_a_uuid_")
+
         val UUID_X_FORWARDED_FOR__VALUE = UUID.randomUUID().toString()
 
         fun errorsOnlyJson(vararg errorCodes: String): String =
@@ -99,11 +100,6 @@ class PeopleSpeedDataSpecBase {
                 jsonMapper.readTree(expectedJson),
                 jsonMapper.readTree(body.toString())
             )
-        }
-
-    fun <T> ResponseEntity<T>.hasBody(expected: String): ResponseEntity<T> =
-        apply {
-            assertEquals(expected, body)
         }
 
     fun post(
