@@ -1,17 +1,9 @@
-package com.giftandgo.assessment.features.ingress_filtering.ia
+package com.giftandgo.assessment.api
 
-import com.giftandgo.assessment.PeopleSpeedDataSpecBase
-import com.maciejwalkowiak.wiremock.spring.ConfigureWireMock
-import com.maciejwalkowiak.wiremock.spring.EnableWireMock
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus.CREATED
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableWireMock(
-    ConfigureWireMock(name = "ip-api", property = "app.features.ingress-filtering.ip-api-url")
-)
-class ValidationSpec : PeopleSpeedDataSpecBase() {
+class ValidationSpec : ApiSpecBase() {
     @Test
     fun `That malformed UUIDs are reported`() {
         stubIpApi()

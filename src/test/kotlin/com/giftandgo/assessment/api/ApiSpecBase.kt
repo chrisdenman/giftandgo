@@ -1,4 +1,4 @@
-package com.giftandgo.assessment
+package com.giftandgo.assessment.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.giftandgo.assessment.features.ingress_filtering.ui.IngressFilter.Companion.HTTP_HEADER__X_FORWARDED_FOR
@@ -21,12 +21,11 @@ import org.springframework.http.MediaType.TEXT_PLAIN
 import org.springframework.http.ResponseEntity
 import java.util.UUID
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableWireMock(
     ConfigureWireMock(name = "ip-api", property = "app.features.ingress-filtering.ip-api-url")
 )
-class PeopleSpeedDataSpecBase {
+class ApiSpecBase {
 
     companion object {
         private fun createRow(
@@ -53,11 +52,12 @@ class PeopleSpeedDataSpecBase {
         fun errorsOnlyJson(vararg errorCodes: String): String =
             """{"created":[],"errors":[${errorCodes.joinToString(",", "\"", "\"")}]}"""
 
-        const val DEFAULT__STATUS = "success"
-        const val DEFAULT__COUNTRY_CODE =   "GB"
-        const val DEFAULT__ISP =    "isp"
-        const val DEFAULT__ORG =    "org"
-        const val DEFAULT__HOSTING =    "true"
+        const val STATUS__SUCCESS = "success"
+        const val DEFAULT__STATUS = STATUS__SUCCESS
+        const val DEFAULT__COUNTRY_CODE = "GB"
+        const val DEFAULT__ISP = "isp"
+        const val DEFAULT__ORG = "org"
+        const val DEFAULT__HOSTING = "true"
     }
 
     @InjectWireMock("ip-api")
@@ -72,6 +72,16 @@ class PeopleSpeedDataSpecBase {
 
     protected val jsonMapper: ObjectMapper = ObjectMapper()
 
+    fun stubIpApi(xForwardedFor: String = UUID_X_FORWARDED_FOR__VALUE, body: String) =
+        wiremock.stubFor(
+            WireMock.get(WireMock.urlPathMatching("/json/${xForwardedFor}.*"))
+                .willReturn(
+                    WireMock.aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(body)
+                )
+        )
+
     fun stubIpApi(
         xForwardedFor: String = UUID_X_FORWARDED_FOR__VALUE,
         status: String = DEFAULT__STATUS,
@@ -79,16 +89,17 @@ class PeopleSpeedDataSpecBase {
         isp: String = DEFAULT__ISP,
         org: String = DEFAULT__ORG,
         hosting: String = DEFAULT__HOSTING
-    ) {
+    ) =
         wiremock.stubFor(
             WireMock.get(WireMock.urlPathMatching("/json/${xForwardedFor}.*"))
                 .willReturn(
                     WireMock.aResponse()
                         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .withBody("""{"status":"$status","countryCode":"$countryCode","isp":"$isp","org":"$org","hosting":$hosting}""")
+                        .withBody(
+                            """{"status":"$status","countryCode":"$countryCode","isp":"$isp","org":"$org","hosting":$hosting}"""
+                        )
                 )
         )
-    }
 
     fun <T> ResponseEntity<T>.expectStatus(expected: HttpStatus): ResponseEntity<T> =
         apply { assertEquals(expected, statusCode) }
