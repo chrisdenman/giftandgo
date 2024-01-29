@@ -1,9 +1,9 @@
 package com.giftandgo.assessment.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.giftandgo.assessment.features.ingress_filtering.ui.IngressFilter.Companion.HTTP_HEADER__X_FORWARDED_FOR
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import com.maciejwalkowiak.wiremock.spring.ConfigureWireMock
 import com.maciejwalkowiak.wiremock.spring.EnableWireMock
 import com.maciejwalkowiak.wiremock.spring.InjectWireMock
@@ -52,12 +52,14 @@ class ApiSpecBase {
         fun errorsOnlyJson(vararg errorCodes: String): String =
             """{"created":[],"errors":[${errorCodes.joinToString(",", "\"", "\"")}]}"""
 
-        const val STATUS__SUCCESS = "success"
+        private const val STATUS__SUCCESS = "success"
         const val DEFAULT__STATUS = STATUS__SUCCESS
         const val DEFAULT__COUNTRY_CODE = "GB"
         const val DEFAULT__ISP = "isp"
         const val DEFAULT__ORG = "org"
         const val DEFAULT__HOSTING = "true"
+
+        const val HTTP_HEADER__X_FORWARDED_FOR = "x-forwarded-for"
     }
 
     @InjectWireMock("ip-api")
@@ -72,7 +74,7 @@ class ApiSpecBase {
 
     protected val jsonMapper: ObjectMapper = ObjectMapper()
 
-    fun stubIpApi(xForwardedFor: String = UUID_X_FORWARDED_FOR__VALUE, body: String) =
+    fun stubIpApi(xForwardedFor: String = UUID_X_FORWARDED_FOR__VALUE, body: String): StubMapping =
         wiremock.stubFor(
             WireMock.get(WireMock.urlPathMatching("/json/${xForwardedFor}.*"))
                 .willReturn(
@@ -89,7 +91,7 @@ class ApiSpecBase {
         isp: String = DEFAULT__ISP,
         org: String = DEFAULT__ORG,
         hosting: String = DEFAULT__HOSTING
-    ) =
+    ): StubMapping =
         wiremock.stubFor(
             WireMock.get(WireMock.urlPathMatching("/json/${xForwardedFor}.*"))
                 .willReturn(
