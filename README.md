@@ -3,7 +3,8 @@
 ## Notes
 
 - Feature based using clean architecture principles.
-- [./post.sh](./post.sh) may be used to post the contents of the file [./data.csv](./data.csv) with `curl` when the application is running.
+- [./post.sh](./post.sh) may be used to post the contents of the file [./data.csv](./data.csv) with `curl` when the
+  application is running.
 - `spring-modulith` based.
 
 ## Requirements

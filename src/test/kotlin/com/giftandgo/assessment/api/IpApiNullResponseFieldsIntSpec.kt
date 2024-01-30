@@ -1,8 +1,6 @@
 package com.giftandgo.assessment.api
 
 import org.junit.jupiter.api.Test
-import org.springframework.http.HttpStatus.FORBIDDEN
-
 class IpApiNullResponseFieldsIntSpec : WireMockIntSpecBase() {
     @Test
     fun `That if only a successful status message is included, the request is forbidden`() {

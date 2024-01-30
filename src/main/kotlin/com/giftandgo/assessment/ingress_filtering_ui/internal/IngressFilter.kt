@@ -2,7 +2,6 @@ package com.giftandgo.assessment.ingress_filtering_ui.internal
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.giftandgo.assessment.ingress_filtering_uc.IngressService
-import com.giftandgo.assessment.ingress_filtering_ui.RemoteHostResolver
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest

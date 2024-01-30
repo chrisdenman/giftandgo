@@ -1,7 +1,6 @@
 package com.giftandgo.assessment.api
 
 import org.junit.jupiter.api.Test
-import org.springframework.http.HttpStatus.FORBIDDEN
 import org.springframework.test.context.TestPropertySource
 
 @TestPropertySource

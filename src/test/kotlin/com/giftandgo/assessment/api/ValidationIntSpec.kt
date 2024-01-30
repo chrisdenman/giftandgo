@@ -1,8 +1,6 @@
 package com.giftandgo.assessment.api
 
 import org.junit.jupiter.api.Test
-import org.springframework.http.HttpStatus.CREATED
-
 
 class ValidationIntSpec : WireMockIntSpecBase() {
     @Test

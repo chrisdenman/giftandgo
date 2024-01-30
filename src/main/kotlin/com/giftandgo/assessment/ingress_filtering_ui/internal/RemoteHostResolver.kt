@@ -1,4 +1,4 @@
-package com.giftandgo.assessment.ingress_filtering_ui
+package com.giftandgo.assessment.ingress_filtering_ui.internal
 
 import jakarta.servlet.http.HttpServletRequest
 

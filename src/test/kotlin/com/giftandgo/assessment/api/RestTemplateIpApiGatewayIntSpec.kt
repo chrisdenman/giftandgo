@@ -9,7 +9,7 @@ class RestTemplateIpApiGatewayIntSpec : WireMockIntSpecBase() {
         stubIpApi()
         post()
             .withJson(
-"""{"created":[{"name":"John Smith","transport":"Rides A Bike","averageSpeed":6.2}],"errors":[]}"""
+                """{"created":[{"name":"John Smith","transport":"Rides A Bike","averageSpeed":6.2}],"errors":[]}"""
             )
             .isCreated()
     }

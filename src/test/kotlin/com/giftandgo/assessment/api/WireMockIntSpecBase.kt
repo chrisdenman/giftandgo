@@ -102,7 +102,7 @@ class WireMockIntSpecBase {
                     aResponse()
                         .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                         .withBody(
-"""{"status":"$status","countryCode":"$countryCode","isp":"$isp","org":"$org","hosting":$hosting}"""
+                            """{"status":"$status","countryCode":"$countryCode","isp":"$isp","org":"$org","hosting":$hosting}"""
                         )
                 )
         )
@@ -114,6 +114,7 @@ class WireMockIntSpecBase {
     fun <T> ResponseEntity<T>.isForbidden(): ResponseEntity<T> = apply {
         expectStatus(HttpStatus.FORBIDDEN)
     }
+
     fun <T> ResponseEntity<T>.isBadRequest(): ResponseEntity<T> = apply {
         expectStatus(HttpStatus.BAD_REQUEST)
     }
@@ -121,6 +122,7 @@ class WireMockIntSpecBase {
     fun <T> ResponseEntity<T>.isNotFound(): ResponseEntity<T> = apply {
         expectStatus(HttpStatus.NOT_FOUND)
     }
+
     fun <T> ResponseEntity<T>.isCreated(): ResponseEntity<T> = apply {
         expectStatus(HttpStatus.CREATED)
     }
