@@ -4,6 +4,7 @@
 
 - Feature based using clean architecture principles.
 - [./post.sh](./post.sh) may be used to post the contents of the file [./data.csv](./data.csv) with `curl` when the application is running.
+- `spring-modulith` based.
 
 ## Requirements
 
@@ -17,9 +18,7 @@
 
 ## Modulith ToDo
 
-* check all tests work and there's no warnings
-* add modulith dependencies
-- convert into a modulith, module by module
+- sort layered calls properly
 - convert into a multi-project gradle project with each module as nested project
 
 ## Links

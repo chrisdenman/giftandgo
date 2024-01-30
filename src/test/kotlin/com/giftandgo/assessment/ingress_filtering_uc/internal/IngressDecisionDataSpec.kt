@@ -1,4 +1,4 @@
-package com.giftandgo.assessment.ingress_filtering.uc
+package com.giftandgo.assessment.ingress_filtering_uc.internal
 
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -11,8 +11,8 @@ class IngressDecisionDataSpec {
     fun ingressIsAllowedIfEmptyErrorsPresent() {
         assertTrue(
             IngressDecisionData(
-                UUID.randomUUID().toString(),
-                SimpleErrors(this)
+                SimpleErrors(this),
+                UUID.randomUUID().toString()
             )
                 .isAllowed
         )
@@ -22,8 +22,8 @@ class IngressDecisionDataSpec {
     fun ingressNotAllowedIfErrorsPresent() {
         assertFalse(
             IngressDecisionData(
-                UUID.randomUUID().toString(),
-                SimpleErrors(this).apply { reject("") }
+                SimpleErrors(this).apply { reject("") },
+                UUID.randomUUID().toString()
             )
                 .isAllowed
         )

@@ -3,14 +3,14 @@ package com.giftandgo.assessment.api
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus.FORBIDDEN
 
-class IpApiNullResponseFieldsIntSpec : ApiSpecBase() {
+class IpApiNullResponseFieldsIntSpec : WireMockIntSpecBase() {
     @Test
     fun `That if only a successful status message is included, the request is forbidden`() {
         stubIpApi(
             body = """{"status":"success"}"""
         )
         post()
-            .expectStatus(FORBIDDEN)
+            .isForbidden()
     }
 
     @Test
@@ -19,7 +19,7 @@ class IpApiNullResponseFieldsIntSpec : ApiSpecBase() {
             body = """{"status":"success", "org": "org"}"""
         )
         post()
-            .expectStatus(FORBIDDEN)
+            .isForbidden()
     }
 
     @Test
@@ -28,6 +28,6 @@ class IpApiNullResponseFieldsIntSpec : ApiSpecBase() {
             body = """{"status":"not_a_success"}"""
         )
         post()
-            .expectStatus(FORBIDDEN)
+            .isForbidden()
     }
 }

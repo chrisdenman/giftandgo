@@ -1,6 +1,7 @@
-package com.giftandgo.assessment.ingress_filtering.ia
+package com.giftandgo.assessment.ingress_filtering_ia.internal
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.giftandgo.assessment.ingress_filtering_ia.IpApiResponse
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class IpApiResponseData(

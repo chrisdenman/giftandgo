@@ -1,4 +1,4 @@
-package com.giftandgo.assessment.ingress_filtering.ia
+package com.giftandgo.assessment.ingress_filtering_ia
 
 interface IpApiResponse {
     val status: String

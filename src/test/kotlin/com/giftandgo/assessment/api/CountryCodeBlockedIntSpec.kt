@@ -5,12 +5,12 @@ import org.springframework.http.HttpStatus.FORBIDDEN
 import org.springframework.test.context.TestPropertySource
 
 @TestPropertySource
-class CountryCodeBlockedIntSpec : ApiSpecBase() {
+class CountryCodeBlockedIntSpec : WireMockIntSpecBase() {
     @Test
     fun `That requests with blocked country codes are forbidden`() {
         stubIpApi()
         post()
-            .hasJsonBody(errorsOnlyJson("Your country is blocked."))
-            .expectStatus(FORBIDDEN)
+            .withJson(errorsOnlyJson("Your country is blocked."))
+            .isForbidden()
     }
 }

@@ -1,7 +1,7 @@
-package com.giftandgo.assessment.ingress_filtering.uc
+package com.giftandgo.assessment.ingress_filtering_uc.internal
 
-import com.giftandgo.assessment.ingress_filtering.ia.IpApiGateway
-import com.giftandgo.assessment.ingress_filtering.ia.IpApiResponseData
+import com.giftandgo.assessment.ingress_filtering_ia.IpApiGateway
+import com.giftandgo.assessment.ingress_filtering_ia.internal.IpApiResponseData
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test

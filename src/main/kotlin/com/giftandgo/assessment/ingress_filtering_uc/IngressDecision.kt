@@ -1,4 +1,4 @@
-package com.giftandgo.assessment.ingress_filtering.uc
+package com.giftandgo.assessment.ingress_filtering_uc
 
 import org.springframework.validation.Errors
 

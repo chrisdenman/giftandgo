@@ -1,6 +1,6 @@
-package com.giftandgo.assessment.ingress_filtering.uc
+package com.giftandgo.assessment.ingress_filtering_uc.internal
 
-import com.giftandgo.assessment.ingress_filtering.ui.rejectNull
+import com.giftandgo.assessment.ingress_filtering_ia.IpApiResponse
 import org.springframework.validation.Errors
 import org.springframework.validation.Validator
 
@@ -12,11 +12,11 @@ class IpApiResponseValidator(private val ingressFilteringUcConfig: IngressFilter
     }
 
     override fun supports(clazz: Class<*>): Boolean =
-        com.giftandgo.assessment.ingress_filtering.ia.IpApiResponse::class.java == clazz
+        IpApiResponse::class.java == clazz
 
     override fun validate(target: Any, errors: Errors) {
         errors.run {
-            if ((target as com.giftandgo.assessment.ingress_filtering.ia.IpApiResponse).status != "success") {
+            if ((target as IpApiResponse).status != "success") {
                 errors.rejectValue("status", "unsuccessful")
             } else {
                 if (target.countryCode == null) {
@@ -31,7 +31,9 @@ class IpApiResponseValidator(private val ingressFilteringUcConfig: IngressFilter
                     if (target.hosting == null) {
                         rejectNull("hosting")
                     } else {
-                        if ((target.hosting == true) && (target.org in ingressFilteringUcConfig.blockedDataCenterOrgs)) {
+                        if ((target.hosting == true) &&
+                            (target.org in ingressFilteringUcConfig.blockedDataCenterOrgs)
+                        ) {
                             rejectValue("org", "blockedDataCenterOrgs")
                         } else {
 

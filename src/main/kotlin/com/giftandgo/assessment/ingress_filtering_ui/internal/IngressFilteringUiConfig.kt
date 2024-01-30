@@ -1,6 +1,6 @@
-package com.giftandgo.assessment.ingress_filtering.ui
+package com.giftandgo.assessment.ingress_filtering_ui.internal
 
-import com.giftandgo.assessment.ingress_filtering.uc.IngressService
+import com.giftandgo.assessment.ingress_filtering_uc.internal.IngressService
 import jakarta.servlet.Filter
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.MessageSource

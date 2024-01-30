@@ -1,5 +1,7 @@
-package com.giftandgo.assessment.ingress_filtering.ia
+package com.giftandgo.assessment.ingress_filtering_ia.internal
 
+import com.giftandgo.assessment.ingress_filtering_ia.IpApiGateway
+import com.giftandgo.assessment.ingress_filtering_ia.IpApiResponse
 import org.springframework.web.client.RestTemplate
 
 class RestTemplateIpApiGateway(

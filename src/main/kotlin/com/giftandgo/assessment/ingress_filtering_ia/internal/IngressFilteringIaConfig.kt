@@ -1,4 +1,4 @@
-package com.giftandgo.assessment.ingress_filtering.ia
+package com.giftandgo.assessment.ingress_filtering_ia.internal
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.web.client.RestTemplateBuilder
