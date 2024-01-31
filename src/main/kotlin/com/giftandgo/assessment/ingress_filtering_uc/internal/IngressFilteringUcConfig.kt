@@ -1,11 +1,10 @@
 package com.giftandgo.assessment.ingress_filtering_uc.internal
 
-import com.giftandgo.assessment.ingress_filtering_ia.IpApiGateway
+import com.giftandgo.assessment.ingress_filtering_uc.HostInformationGateway
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-@Suppress("ConfigurationProperties")
 @Configuration
 @ConfigurationProperties(prefix = "app.features.ingress-filtering")
 class IngressFilteringUcConfig {
@@ -15,6 +14,9 @@ class IngressFilteringUcConfig {
     lateinit var blockedDataCenterOrgs: List<String>
 
     @Bean
-    fun ipApiService(ipApiGateway: IpApiGateway): IngressService =
-        IngressService(ipApiGateway, IpApiResponseValidator(this))
+    fun ingressService(hostInformationGateway: HostInformationGateway): IngressService =
+        IngressService(
+            hostInformationGateway,
+            HostInformationValidator(blockedCountries, blockedDataCenterOrgs)
+        )
 }

@@ -2,7 +2,7 @@ package com.giftandgo.assessment.api
 
 import org.junit.jupiter.api.Test
 
-class RestTemplateIpApiGatewayIntSpec : WireMockIntSpecBase() {
+class IpApiRestTemplateGatewayIntSpec : WireMockIntSpecBase() {
 
     @Test
     fun `That posting people speed data is created successfully`() {

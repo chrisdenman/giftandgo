@@ -26,7 +26,7 @@ import java.util.UUID
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableWireMock(
-    ConfigureWireMock(name = "ip-api", property = "app.features.ingress-filtering.ip-api-url")
+    ConfigureWireMock(name = "ip-api", property = "app.features.ingress-filtering.ip-api.url")
 )
 class WireMockIntSpecBase {
 
@@ -128,7 +128,7 @@ class WireMockIntSpecBase {
     }
 
     fun <T> ResponseEntity<T>.expectStatus(expected: HttpStatus): ResponseEntity<T> =
-        apply { assertEquals(expected, statusCode) }
+        apply { assertEquals(expected.value(), statusCode.value()) }
 
 
     fun <T> ResponseEntity<T>.withJson(text: String): ResponseEntity<T> =

@@ -19,9 +19,7 @@ class ModulesUtilitySpec {
 
     @Test
     fun buildDocumentation() {
-        Documenter(
-            ApplicationModules.of(APPLICATION__CLASS)
-        )
+        Documenter(ApplicationModules.of(APPLICATION__CLASS))
             .writeModuleCanvases()
     }
 

@@ -1,7 +1,7 @@
 package com.giftandgo.assessment.ingress_filtering_uc.internal
 
-import com.giftandgo.assessment.ingress_filtering_ia.IpApiGateway
-import com.giftandgo.assessment.ingress_filtering_ia.internal.IpApiResponseData
+import com.giftandgo.assessment.ingress_filtering_uc.HostInformationGateway
+import com.giftandgo.assessment.ingress_filtering_ia.ipapi.HostInformationData
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
@@ -19,19 +19,19 @@ class IngressServiceSpec {
     private val org = UUID.randomUUID().toString()
     private val isp = UUID.randomUUID().toString()
     private val ipApiResponse =
-        IpApiResponseData(status, countryCode, hosting, org, isp)
+        HostInformationData(status, countryCode, hosting, org, isp)
     private val errors = SimpleErrors(ipApiResponse)
 
     @Test
     fun ingressServiceReturnsTheCorrectValuesOnSuccess() {
-        val ipApiGatewayMock = mock<IpApiGateway> {
+        val hostInformationGatewayMock = mock<HostInformationGateway> {
             on { queryBy(host) }.thenReturn(ipApiResponse)
         }
         val validatorMock = mock<Validator> {
             on { validateObject(ipApiResponse) }.thenReturn(errors)
         }
-        val subject = IngressService(ipApiGatewayMock, validatorMock)
-        val ingressDecision = subject.getIngressDecisionFor(host)
+        val subject = IngressService(hostInformationGatewayMock, validatorMock)
+        val ingressDecision = subject.getDecisionFor(host)
 
         assertFalse(ingressDecision.errors.hasErrors())
         assertEquals(isp, ingressDecision.ipProvider)
