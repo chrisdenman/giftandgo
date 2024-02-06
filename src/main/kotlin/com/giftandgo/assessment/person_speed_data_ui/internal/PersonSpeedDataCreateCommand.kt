@@ -1,4 +1,4 @@
-package com.giftandgo.assessment.person_speed_data.ui
+package com.giftandgo.assessment.person_speed_data_ui.internal
 
 import jakarta.validation.constraints.DecimalMin
 import jakarta.validation.constraints.NotBlank

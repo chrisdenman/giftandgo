@@ -1,4 +1,4 @@
-package com.giftandgo.assessment.person_speed_data.ui
+package com.giftandgo.assessment.person_speed_data_ui.internal
 
 import org.springframework.boot.web.error.ErrorAttributeOptions
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes

@@ -1,4 +1,4 @@
-package com.giftandgo.assessment.person_speed_data.ui
+package com.giftandgo.assessment.person_speed_data_ui.internal
 
 import org.springframework.http.HttpInputMessage
 import org.springframework.http.HttpOutputMessage

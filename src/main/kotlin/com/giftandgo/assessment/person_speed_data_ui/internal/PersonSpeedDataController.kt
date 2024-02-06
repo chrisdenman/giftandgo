@@ -1,4 +1,4 @@
-package com.giftandgo.assessment.person_speed_data.ui
+package com.giftandgo.assessment.person_speed_data_ui.internal
 
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.core.ResolvableType.forClass
@@ -55,22 +55,24 @@ class PersonSpeedDataController(private val springValidator: Validator) {
                             false -> acc.first to (acc.second + br.target as PersonSpeedDataCreateCommand)
                         }
                     }
-            }.let { it ->
-                if (it.first.isEmpty()) {
-                    PeopleSpeedDataCreateResponse(
-                        it.second.map {
+            }.run {
+                when (first.isEmpty()) {
+                    true -> PeopleSpeedDataCreateResponse(
+                        second.map {
                             PersonSpeedDataCreateResponse(it.name!!, it.transport!!, it.averageSpeed!!)
                         }
                     )
-                } else {
-                    response.status = HttpStatus.BAD_REQUEST.value()
-                    PeopleSpeedDataCreateResponse(
-                        errors = it.first.fold(emptyList()) { acc, curr ->
-                            acc + curr.allErrors.map {
-                                "${it.objectName}.${if (it is FieldError) it.field else ""}.${it.code}"
+
+                    false -> {
+                        response.status = HttpStatus.BAD_REQUEST.value()
+                        PeopleSpeedDataCreateResponse(
+                            errors = first.fold(emptyList()) { acc, curr ->
+                                acc + curr.allErrors.map {
+                                    "${it.objectName}.${if (it is FieldError) it.field else ""}.${it.code}"
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
 
