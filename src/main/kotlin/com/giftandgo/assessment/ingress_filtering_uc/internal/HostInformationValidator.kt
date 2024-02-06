@@ -14,30 +14,26 @@ class HostInformationValidator(
         private const val FIELD__COUNTRY_CODE = "countryCode"
     }
 
-    override fun supports(clazz: Class<*>): Boolean = HostInformation::class.java == clazz
+    override fun supports(clazz: Class<*>): Boolean = HostInformation::class.java == clazz // @todo and isAssignableFrom
 
     override fun validate(target: Any, errors: Errors) {
         errors.run {
-            if ((target as HostInformation).status != "success") {
-                rejectValue("status", "unsuccessful")
-            } else {
-                if (target.countryCode == null) {
-                    rejectNull(this, FIELD__COUNTRY_CODE)
-                } else if (target.countryCode in blockedCountries) {
-                    rejectValue(FIELD__COUNTRY_CODE, "blocked")
-                }
 
-                if (target.org == null) {
-                    rejectNull(errors, "org")
+            if ((target as HostInformation).countryCode == null) {
+                rejectNull(this, FIELD__COUNTRY_CODE)
+            } else if (target.countryCode in blockedCountries) {
+                rejectValue(FIELD__COUNTRY_CODE, "blocked")
+            }
+
+            if (target.org == null) {
+                rejectNull(errors, "org")
+            } else {
+                if (target.hosting == null) {
+                    rejectNull(this, "hosting")
                 } else {
-                    if (target.hosting == null) {
-                        rejectNull(this, "hosting")
+                    if ((target.hosting == true) && (target.org in blockedDataCenterOrgs)) {
+                        rejectValue("org", "blockedDataCenterOrgs")
                     } else {
-                        if ((target.hosting == true) && (target.org in blockedDataCenterOrgs)
-                        ) {
-                            rejectValue("org", "blockedDataCenterOrgs")
-                        } else {
-                        }
                     }
                 }
             }

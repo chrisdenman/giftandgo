@@ -19,8 +19,10 @@
 
 ## Modulith ToDo
 
-- sort layered calls properly
+- refactor the event transceiver to handle multi-requesting
+- convert the rest of the features to messaging
 - convert into a multi-project gradle project with each module as nested project
+    - use internal modifier?
 
 ## Links
 

@@ -1,7 +1,8 @@
 package com.giftandgo.assessment
 
-import com.giftandgo.assessment.ingress_filtering_ia.ipapi.IpApiIngressFilteringConfig
-import com.giftandgo.assessment.ingress_filtering_uc.internal.IngressFilteringUcConfig
+import com.giftandgo.assessment.ingress_filtering_ia.ipapi.IpApiIngressFilteringProperties
+import com.giftandgo.assessment.ingress_filtering_uc.internal.IngressFilteringUcProperties
+import com.giftandgo.assessment.ingress_filtering_ui.internal.IngressFilteringUiProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
@@ -11,6 +12,10 @@ fun main(args: Array<String>): Unit {
     runApplication<Application>(*args)
 }
 
-@EnableConfigurationProperties(IpApiIngressFilteringConfig::class, IngressFilteringUcConfig::class)
+@EnableConfigurationProperties(
+    IpApiIngressFilteringProperties::class,
+    IngressFilteringUcProperties::class,
+    IngressFilteringUiProperties::class
+)
 @SpringBootApplication
 class Application

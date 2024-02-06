@@ -1,12 +1,10 @@
 package com.giftandgo.assessment.ingress_filtering_uc
 
-import org.springframework.validation.Errors
-
-interface IngressDecision {
+interface IngressDecision : CorrelatedApplicationEvent {
 
     val isAllowed: Boolean
 
-    val ipProvider: String?
+    val isp: String?
 
-    val errors: Errors
+    val errorCodes: Iterable<String>
 }

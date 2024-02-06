@@ -28,6 +28,5 @@ class ModulesUtilitySpec {
         ApplicationModules
             .of(APPLICATION__CLASS)
             .forEach(System.out::println)
-
     }
 }
