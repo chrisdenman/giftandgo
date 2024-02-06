@@ -59,7 +59,7 @@ class AsyncRequestResponsePublisher<S : CorrelatedApplicationEvent, R : Correlat
                 }
             } finally {
                 messageCorrelationIdToState.remove(event.correlationId)
-                logger.info("${messageCorrelationIdToState.size} left")
+                logger.info("Awaiting ${messageCorrelationIdToState.size} responses")
             }
         }
     }
