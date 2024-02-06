@@ -73,13 +73,13 @@ private class UriAttributeConverter : AttributeConverter<URI, String> {
 @Converter
 private class HttpStatusAttributeConverter : AttributeConverter<HttpStatus, Int> {
     override fun convertToDatabaseColumn(attribute: HttpStatus): Int = attribute.value()
-    override fun convertToEntityAttribute(ignored: Int): HttpStatus = TODO()
+    override fun convertToEntityAttribute(httpStatusValue: Int): HttpStatus = HttpStatus.valueOf(httpStatusValue)
 }
 
 @Converter
 private class InetAddressAttributeConverter : AttributeConverter<InetAddress, String> {
     override fun convertToDatabaseColumn(attribute: InetAddress): String = attribute.hostAddress
-    override fun convertToEntityAttribute(ignored: String): InetAddress = TODO()
+    override fun convertToEntityAttribute(addressText: String): InetAddress = InetAddress.getByName(addressText)
 }
 
 @Converter
