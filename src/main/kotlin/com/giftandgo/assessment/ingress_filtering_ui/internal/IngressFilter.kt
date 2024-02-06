@@ -29,6 +29,7 @@ open class IngressFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
+        logger.info("Ingress filtering")
         val ingressDecision: IngressDecision = publisher
             .publishAndBlockFor(IngressQueryEvent(getOriginHost(request)), IngressDecision::class.java)
 

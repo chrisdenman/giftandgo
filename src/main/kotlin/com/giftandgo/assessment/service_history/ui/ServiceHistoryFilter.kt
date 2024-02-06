@@ -26,11 +26,12 @@ open class ServiceHistoryFilter(private val serviceHistoryService: ServiceHistor
         response: HttpServletResponse,
         chain: FilterChain
     ) {
-        val timeMeasure = StopWatch()
+        logger.info("Service History filtering")
+        val stopWatch = StopWatch()
         try {
-            timeMeasure.start("Service /peopleSpeedData requests")
+            stopWatch.start("Service /peopleSpeedData requests")
             chain.doFilter(request, response)
-            timeMeasure.stop()
+            stopWatch.stop()
         } finally {
             serviceHistoryService.saveServiceHistory(
                 URI.create(request.requestURI),
@@ -39,7 +40,7 @@ open class ServiceHistoryFilter(private val serviceHistoryService: ServiceHistor
                 InetAddress.getByName(request.remoteAddr),
                 request.locale.country,
                 request.getAttribute(REQUEST_ATTRIBUTE__IP_PROVIDER) as? String,
-                Duration.ofMillis(timeMeasure.totalTimeMillis)
+                Duration.ofMillis(stopWatch.totalTimeMillis)
             )
         }
     }
