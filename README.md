@@ -19,10 +19,12 @@
 
 ## Modulith ToDo
 
-- refactor the event transceiver to handle multi-requesting
 - convert the rest of the features to messaging
 - convert into a multi-project gradle project with each module as nested project
     - use internal modifier?
+- look at the Mono. stuff for possible removal of request/response publisher
+- add same scala perf. tests
+- look at the possibility of supporting transactions if needed for the publisher
 
 ## Links
 

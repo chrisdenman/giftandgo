@@ -13,7 +13,7 @@ import java.io.IOException
 
 open class IngressFilter(
     private val messageSource: MessageSource,
-    private val eventTransceiver: EventTransceiver<IngressQueryEvent, IngressDecision>,
+    private val publisher: AsyncRequestResponsePublisher<IngressQueryEvent, IngressDecision>,
     private val remoteHostResolver: RemoteHostResolver? = null
 ) : OncePerRequestFilter() {
 
@@ -29,8 +29,8 @@ open class IngressFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val ingressDecision: IngressDecision = eventTransceiver
-            .awaitResponseTo(IngressQueryEvent(getOriginHost(request)), IngressDecision::class.java)
+        val ingressDecision: IngressDecision = publisher
+            .publishAndBlockFor(IngressQueryEvent(getOriginHost(request)), IngressDecision::class.java)
 
         when (ingressDecision.isAllowed) {
             true -> {

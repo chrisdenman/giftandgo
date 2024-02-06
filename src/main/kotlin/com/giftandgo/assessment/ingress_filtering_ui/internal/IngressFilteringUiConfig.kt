@@ -14,21 +14,23 @@ import java.util.concurrent.Executors
 @ConditionalOnProperty(name = ["app.features.ingress-filtering"], havingValue = "true")
 @Configuration
 class IngressFilteringUiConfig {
+
     @Bean
-    fun eventTransceiver(
+    fun publisher(
         applicationEventPublisher: ApplicationEventPublisher,
         ingressFilteringUiProperties: IngressFilteringUiProperties
-    ) = EventTransceiver<IngressQueryEvent, IngressDecision>(
-        applicationEventPublisher,
-        Executors.newSingleThreadExecutor(),
-        ingressFilteringUiProperties.decisionTimeOutMilliSeconds
-    )
+    ): AsyncRequestResponsePublisher<IngressQueryEvent, IngressDecision> =
+        AsyncRequestResponsePublisher<IngressQueryEvent, IngressDecision>(
+            applicationEventPublisher,
+            Executors.newSingleThreadExecutor(),
+            ingressFilteringUiProperties.decisionTimeOutMilliSeconds
+        )
 
     @Bean
     fun ingressFilter(
         messageSource: MessageSource,
-        eventTransceiver: EventTransceiver<IngressQueryEvent, IngressDecision>
-    ): Filter = IngressFilter(messageSource, eventTransceiver)
+        publisher: AsyncRequestResponsePublisher<IngressQueryEvent, IngressDecision>
+    ): Filter = IngressFilter(messageSource, publisher)
 
     @Bean
     fun ingressFilterRegistration(ingressFilter: Filter): FilterRegistrationBean<*> =
