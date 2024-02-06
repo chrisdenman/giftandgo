@@ -1,5 +1,6 @@
-package com.giftandgo.assessment.service_history.ia
+package com.giftandgo.assessment.service_history_ia.internal
 
+import com.giftandgo.assessment.service_history_uc.ServiceHistory
 import jakarta.annotation.Nullable
 import jakarta.persistence.AttributeConverter
 import jakarta.persistence.Column
@@ -63,6 +64,7 @@ class ServiceHistoryEntity(
     @Column(length = 36)
     @field:Id override val id: String = UUID.randomUUID().toString(),
 ) : ServiceHistory
+
 
 @Converter
 private class UriAttributeConverter : AttributeConverter<URI, String> {

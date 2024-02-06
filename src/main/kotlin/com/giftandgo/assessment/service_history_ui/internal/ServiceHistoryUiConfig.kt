@@ -1,8 +1,8 @@
-package com.giftandgo.assessment.service_history.ui
+package com.giftandgo.assessment.service_history_ui.internal
 
-import com.giftandgo.assessment.service_history.uc.ServiceHistoryService
 import jakarta.servlet.Filter
 import org.springframework.boot.web.servlet.FilterRegistrationBean
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
@@ -11,8 +11,8 @@ import org.springframework.core.Ordered
 class ServiceHistoryUiConfig {
 
     @Bean("serviceHistoryFilter")
-    fun serviceHistoryFilter(serviceHistoryService: ServiceHistoryService): Filter =
-        ServiceHistoryFilter(serviceHistoryService)
+    fun serviceHistoryFilter(applicationEventPublisher: ApplicationEventPublisher): Filter =
+        ServiceHistoryFilter(applicationEventPublisher)
 
     @Bean
     fun persistApiResponseFilterRegistration(serviceHistoryFilter: Filter): FilterRegistrationBean<*> =

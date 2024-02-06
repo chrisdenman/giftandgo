@@ -1,10 +1,10 @@
-package com.giftandgo.assessment.service_history.ui
+package com.giftandgo.assessment.service_history_ui.internal
 
-import com.giftandgo.assessment.service_history.uc.ServiceHistoryService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.HttpStatus
 import org.springframework.util.StopWatch
 import org.springframework.web.filter.OncePerRequestFilter
@@ -14,7 +14,8 @@ import java.net.URI
 import java.time.Duration
 import java.time.LocalDateTime
 
-open class ServiceHistoryFilter(private val serviceHistoryService: ServiceHistoryService) : OncePerRequestFilter() {
+open class ServiceHistoryFilter(private val applicationEventPublisher: ApplicationEventPublisher) :
+    OncePerRequestFilter() {
 
     companion object {
         const val REQUEST_ATTRIBUTE__IP_PROVIDER = "INGRESS_FILTER_IP_PROVIDER=292e035f-e160-4c34-a427-a27096245d37"
@@ -33,14 +34,16 @@ open class ServiceHistoryFilter(private val serviceHistoryService: ServiceHistor
             chain.doFilter(request, response)
             stopWatch.stop()
         } finally {
-            serviceHistoryService.saveServiceHistory(
-                URI.create(request.requestURI),
-                LocalDateTime.now(),
-                HttpStatus.resolve(response.status)!!,
-                InetAddress.getByName(request.remoteAddr),
-                request.locale.country,
-                request.getAttribute(REQUEST_ATTRIBUTE__IP_PROVIDER) as? String,
-                Duration.ofMillis(stopWatch.totalTimeMillis)
+            applicationEventPublisher.publishEvent(
+                ServiceHistoryEventData(
+                    URI.create(request.requestURI),
+                    LocalDateTime.now(),
+                    HttpStatus.resolve(response.status)!!,
+                    InetAddress.getByName(request.remoteAddr),
+                    request.locale.country,
+                    Duration.ofMillis(stopWatch.totalTimeMillis),
+                    request.getAttribute(REQUEST_ATTRIBUTE__IP_PROVIDER) as? String
+                )
             )
         }
     }

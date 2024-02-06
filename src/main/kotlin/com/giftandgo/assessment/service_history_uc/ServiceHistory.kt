@@ -1,4 +1,4 @@
-package com.giftandgo.assessment.service_history.ia
+package com.giftandgo.assessment.service_history_uc
 
 import org.springframework.http.HttpStatus
 import java.net.InetAddress
@@ -7,7 +7,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 interface ServiceHistory {
-    val id: String
+    val id: String?
     val requestUri: URI
     val receivedAt: LocalDateTime
     val statusCode: HttpStatus
