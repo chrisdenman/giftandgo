@@ -36,7 +36,7 @@ open class ServiceHistoryFilter(private val serviceHistoryService: ServiceHistor
             serviceHistoryService.saveServiceHistory(
                 URI.create(request.requestURI),
                 LocalDateTime.now(),
-                HttpStatus.resolve((response).status)!!,
+                HttpStatus.resolve(response.status)!!,
                 InetAddress.getByName(request.remoteAddr),
                 request.locale.country,
                 request.getAttribute(REQUEST_ATTRIBUTE__IP_PROVIDER) as? String,
