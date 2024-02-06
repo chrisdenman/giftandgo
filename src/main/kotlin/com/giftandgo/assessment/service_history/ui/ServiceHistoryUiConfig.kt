@@ -11,7 +11,7 @@ import org.springframework.core.Ordered
 class ServiceHistoryUiConfig {
 
     @Bean("serviceHistoryFilter")
-    fun serviceHistoryFilterNormal(serviceHistoryService: ServiceHistoryService): Filter =
+    fun serviceHistoryFilter(serviceHistoryService: ServiceHistoryService): Filter =
         ServiceHistoryFilter(serviceHistoryService)
 
     @Bean
