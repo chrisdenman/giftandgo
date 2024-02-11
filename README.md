@@ -11,20 +11,18 @@
 
 - JDK 17
 - Kotlin 1.9.22
+- Linux with `curl` (for [./post.sh](./post.sh))
 
 ## Branches
 
 - main - Spring Boot
 - modulith - Utilising Spring Boot Modulith
+- composite - Gradle Composite Build Modular Spring Boot
 
-## Modulith ToDo
+## ToDo
 
-- convert into a multi-project gradle project with each module as nested project
-    - use internal modifier?
-    - isn't there dependencies as of events?
-- look at the Mono. stuff for possible removal of request/response publisher
-- add same scala perf. tests
-- look at the possibility of supporting transactions if needed for the publisher
+- Gatling performance tests
+- Annotations for enforcing architecture constraints
 
 ## Links
 
