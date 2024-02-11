@@ -1,0 +1,3 @@
+package com.giftandgo.assessment.service_history_uc_api
+
+interface ServiceHistoryService

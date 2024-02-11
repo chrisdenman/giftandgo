@@ -1,0 +1,59 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.22'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22'
+    id 'org.springframework.boot' version '3.2.1'
+}
+
+group = 'com.giftandgo.assessment'
+version = '0.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = javaSourceCompatibility
+}
+
+//noinspection GroovyAssignabilityCheck,GrUnresolvedAccess
+tasks.withType(KotlinCompile).configureEach {
+    //noinspection GrDeprecatedAPIUsage,GrUnresolvedAccess
+    kotlinOptions {
+        freeCompilerArgs += '-Xjsr305=strict'
+        freeCompilerArgs += '-Xjvm-default=all'
+        jvmTarget = javaSourceCompatibility
+    }
+}
+
+tasks.named('test') {
+    //noinspection GrUnresolvedAccess
+    useJUnitPlatform()
+    //noinspection GrUnresolvedAccess
+    jvmArgs "-Dspring.profiles.active=test"
+}
+
+dependencies {
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    implementation 'com.giftandgo.assessment:ingress-filtering-ip-api-gateway-spring:0.0.1'
+    implementation 'com.giftandgo.assessment:ingress-filtering-uc-spring:0.0.1'
+    implementation 'com.giftandgo.assessment:ingress-filtering-http-filter-spring:0.0.1'
+    implementation 'com.giftandgo.assessment:person-speed-data-http-controller-spring:0.0.1'
+    implementation 'com.giftandgo.assessment:service-history-http-filter-spring:0.0.1'
+    implementation 'com.giftandgo.assessment:service-history-repository-spring:0.0.1'
+    implementation 'com.giftandgo.assessment:service-history-uc-spring:0.0.1'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    runtimeOnly 'com.h2database:h2'
+
+    testImplementation 'com.maciejwalkowiak.spring:wiremock-spring-boot:2.1.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}

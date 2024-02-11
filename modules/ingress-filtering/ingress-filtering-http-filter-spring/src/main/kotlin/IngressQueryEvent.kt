@@ -1,0 +1,6 @@
+package com.giftandgo.assessment.ingress_filtering.http_filter_spring
+
+import com.giftandgo.assessment.ingress_filtering_uc.CorrelatedApplicationEvent
+import com.giftandgo.assessment.ingress_filtering_uc.IngressQuery
+
+interface IngressQueryEvent : IngressQuery, CorrelatedApplicationEvent

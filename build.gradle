@@ -1,56 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-plugins {
-	id 'org.springframework.boot' version '3.2.1'
-	id 'io.spring.dependency-management' version '1.1.4'
-	id 'org.jetbrains.kotlin.jvm' version '1.9.22'
-	id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22'
-	id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.22'
-}
-
 group = 'com.giftandgo.assessment'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 
-java {
-	sourceCompatibility = '17'
-}
-
-repositories {
-	mavenCentral()
-}
-
-dependencies {
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
-	implementation 'org.jetbrains.kotlin:kotlin-reflect'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-
-	runtimeOnly 'com.h2database:h2'
-
-	testImplementation 'org.mockito:mockito-core:3.+'
-	testImplementation 'org.mockito.kotlin:mockito-kotlin:5.2.1'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'com.maciejwalkowiak.spring:wiremock-spring-boot:2.1.0'
-}
-
-tasks.withType(KotlinCompile).configureEach {
-	//noinspection GrDeprecatedAPIUsage
-	kotlinOptions {
-		freeCompilerArgs += '-Xjsr305=strict'
-		freeCompilerArgs += '-Xjvm-default=all'
-		jvmTarget = '17'
-	}
-}
-
-tasks.named('test') {
-	//noinspection GrUnresolvedAccess
-	useJUnitPlatform()
-	//noinspection GrUnresolvedAccess
-	jvmArgs "-Dspring.profiles.active=test"
+tasks.register('clean') {superClean ->
+    superClean.setGroup('build')
+    gradle.includedBuilds.each { includedBuild ->
+        superClean.dependsOn(includedBuild.task(':clean'))
+    }
 }

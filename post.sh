@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 curl  -v \
       -H "Content-Type: text/plain" \

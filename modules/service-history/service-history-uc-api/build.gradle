@@ -1,0 +1,26 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.9.22'
+}
+
+group = 'com.giftandgo.assessment'
+version = '0.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = javaSourceCompatibility
+}
+
+//noinspection GroovyAssignabilityCheck,GrUnresolvedAccess
+tasks.withType(KotlinCompile).configureEach {
+    //noinspection GrDeprecatedAPIUsage,GrUnresolvedAccess
+    kotlinOptions {
+        freeCompilerArgs += '-Xjsr305=strict'
+        freeCompilerArgs += '-Xjvm-default=all'
+        jvmTarget = javaSourceCompatibility
+    }
+}
