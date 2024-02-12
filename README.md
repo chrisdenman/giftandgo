@@ -15,9 +15,9 @@
 
 ## Branches
 
-- main - Spring Boot
-- modulith - Utilising Spring Boot Modulith
-- composite - Gradle Composite Build Modular Spring Boot
+- [main](https://github.com/chrisdenman/giftandgo) - Spring Boot
+- [modulith](https://github.com/chrisdenman/giftandgo/tree/modulith) - Utilising Spring Boot Modulith
+- [composite](https://github.com/chrisdenman/giftandgo/tree/composite) - Gradle Composite Build Modular Spring Boot
 
 ## ToDo
 
