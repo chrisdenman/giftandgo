@@ -15,6 +15,7 @@
 ## Branches
 
 - main - Spring Boot
+- modulith - Utilising Spring Boot Modulith
 - composite - Gradle Composite Build Modular Spring Boot
 
 ## ToDo
